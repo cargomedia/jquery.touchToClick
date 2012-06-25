@@ -1,4 +1,4 @@
-/*
+/**
  * Author: cargomedia.ch
  * Based on: https://developers.google.com/mobile/articles/fast_buttons
  *
@@ -26,7 +26,7 @@
 			for (var i = 0; i < this.coordinates.length; i += 2) {
 				var x = this.coordinates[i];
 				var y = this.coordinates[i + 1];
-				if (Math.abs(event.screenX - x) < 25 && Math.abs(event.screenY - y) < 25) {
+				if (Math.abs(event.pageX - x) < 25 && Math.abs(event.pageY - y) < 25) {
 					event.stopPropagation();
 					event.preventDefault();
 				}
@@ -81,9 +81,7 @@
 
 			element.addEventListener('touchstart', touchHandler, false);
 
-			$(element)
-				.data('touchToClick-handler', touchHandler)
-				.css({'-webkit-tap-highlight-color': 'transparent'});
+			$(element).data('touchToClick-handler', touchHandler);
 
 			return false;
 		},
