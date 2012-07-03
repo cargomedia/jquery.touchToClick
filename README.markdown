@@ -1,10 +1,5 @@
-## Problem and solution 
-Problem with delayed (300ms) click event after touchend event on mobile devices have been solved by triggering click event right after touchstart and preventing the original click to be fired.
-
-Technically all the click events are globally blocked after touchend (which prevents the delayed click).
-Additionally lock is released after 2000ms to enable click triggers from the code.
+## Summary
+Overrights the click event on mobile devices to fire it immediately and get rid of the 300ms delay (webkit for iPhone problem).
 
 
-## Usage
-To enable the fix you only need to include the script. It will automatically affect all your touch events.
 
