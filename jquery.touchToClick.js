@@ -1,6 +1,5 @@
-/**
+/*
  * Author: cargomedia.ch
- * Based on: https://developers.google.com/mobile/articles/fast_buttons
  *
  * Binds 'touchstart' when binding $.on('click')
  * and triggers 'click' when 'touchend' happens without 'touchmove' inbetween.
@@ -11,33 +10,35 @@
 	}
 
 	var clickbuster = {
-		coordinates: [],
-		push: function(x, y) {
-			this.coordinates.push(x, y);
-			var clickbuster = this;
-			window.setTimeout(function() {
-				clickbuster.pop();
-			}, 1000);
-		},
-		pop: function() {
-			this.coordinates.splice(0, 2);
-		},
+		isLocked: false,
+		delayedUnlock: null,
 		onClick: function(event) {
-			for (var i = 0; i < this.coordinates.length; i += 2) {
-				var x = this.coordinates[i];
-				var y = this.coordinates[i + 1];
-				if (Math.abs(event.pageX - x) < 25 && Math.abs(event.pageY - y) < 25) {
-					event.stopPropagation();
-					event.preventDefault();
-				}
+			if (this.isLocked) {
+				event.stopPropagation();
+				event.preventDefault();
+			}
+		},
+		lock: function() {
+			this.isLocked = true;
+			var clickbuster = this;
+			this.delayedUnlock = setTimeout(function() {
+				clickbuster.unlock();
+			}, 2000);
+		},
+		unlock: function() {
+			this.isLocked = false;
+			if (this.delayedUnlock) {
+				window.clearTimeout(this.delayedUnlock);
 			}
 		}
 	};
 	document.addEventListener('click', function(e) {
-		if (!e.isTouchEvent) {
-			clickbuster.onClick(e);
-		}
+		clickbuster.onClick(e);
 	}, true);
+
+
+
+
 
 	$.event.special.click = {
 		delegateType: "click",
@@ -55,8 +56,6 @@
 				onTouchStart: function(e) {
 					e.stopPropagation();
 					this.moved = false;
-					this.startX = e.touches[0].pageX;
-					this.startY = e.touches[0].pageY;
 					element.addEventListener('touchmove', this, false);
 					element.addEventListener('touchend', this, false);
 				},
@@ -68,13 +67,15 @@
 					element.removeEventListener('touchend', this, false);
 
 					if (!this.moved) {
+						clickbuster.unlock();
+
 						var theEvent = document.createEvent('MouseEvents');
 						theEvent.initEvent('click', true, true);
-						theEvent.isTouchEvent = true;
 						e.target.dispatchEvent(theEvent);
 
+						clickbuster.lock();
+
 						e.stopPropagation();
-						clickbuster.push(this.startX, this.startY);
 					}
 				}
 			};
