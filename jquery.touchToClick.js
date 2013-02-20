@@ -76,6 +76,9 @@
 						clickbuster.lock();
 
 						e.stopPropagation();
+						if ('input' !== e.target.tagName.toLowerCase()) {
+							e.preventDefault();
+						}
 					}
 				}
 			};
