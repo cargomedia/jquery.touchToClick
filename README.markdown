@@ -1,3 +1,6 @@
+## Warning: Discontinued
+This project is not maintained anymore. We recommend you to have a look at [FastClick](https://github.com/ftlabs/fastclick) instead.
+
 ## Summary
 Overrides the click event on mobile devices to fire a click event immediately and get rid of the 300ms delay (webkit for iPhone and Android problem).
 
@@ -8,7 +11,3 @@ Just include the file in your webpage:
 ```
 <script type="application/javascript" src="jquery.touchToClick.js"></script>
 ```
-
-
-### Alternatives
-* [FastClick](https://github.com/ftlabs/fastclick) - Has unit tests, but didn't work us reliably on Android stock browser and Android Firefox
