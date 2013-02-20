@@ -36,9 +36,34 @@
 		clickbuster.onClick(e);
 	}, true);
 
+	/**
+	 * Copied from https://github.com/ftlabs/fastclick/blob/master/lib/fastclick.js
+	 *
+	 * @param {EventTarget|Element} target Target DOM element
+	 * @returns {boolean} Returns true if the element requires a call to focus to simulate native click.
+	 */
+	var needsFocus = function(target) {
+		switch (target.nodeName.toLowerCase()) {
+			case 'textarea':
+			case 'select':
+				return true;
+			case 'input':
+				switch (target.type) {
+					case 'button':
+					case 'checkbox':
+					case 'file':
+					case 'image':
+					case 'radio':
+					case 'submit':
+						return false;
+				}
 
-
-
+				// No point in attempting to focus disabled inputs
+				return !target.disabled;
+			default:
+				return (/\bneedsfocus\b/).test(target.className);
+		}
+	};
 
 	$.event.special.click = {
 		delegateType: "click",
@@ -76,7 +101,7 @@
 						clickbuster.lock();
 
 						e.stopPropagation();
-						if ('input' !== e.target.tagName.toLowerCase()) {
+						if (!needsFocus(e.target)) {
 							e.preventDefault();
 						}
 					}
@@ -98,3 +123,4 @@
 		}
 	};
 })(jQuery);
+
