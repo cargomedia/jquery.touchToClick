@@ -1,4 +1,5 @@
-## Warning: Discontinued
+UNMAINTAINED
+============
 This project is not maintained anymore. We recommend you to have a look at [FastClick](https://github.com/ftlabs/fastclick) instead.
 
 ## Summary
